@@ -2,11 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  var a = 1 / 0
-  throw new Error({ info: '报错' })
-
-  res.json({ rsult: a })
+router.get('/aaa', function(req, res, next) {
+  res.json({ rsult: '调用到了。。。' })
 })
-
 module.exports = router

@@ -3,8 +3,7 @@ var express = require('express')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
+const routes = require('./routes')
 // 日志模块
 const winston = require('winston')
 const expressWinston = require('express-winston')
@@ -31,10 +30,10 @@ app.use(
     ]
   })
 )
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
+// app.use('/', indexRouter)
+// app.use('/users', usersRouter)
 // 路由
-// routes(app)
+routes(app)
 // 错误请求的日志
 app.use(
   expressWinston.errorLogger({

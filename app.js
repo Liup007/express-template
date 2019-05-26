@@ -1,68 +1,28 @@
-var createError = require('http-errors')
 var express = require('express')
 var cookieParser = require('cookie-parser')
-var logger = require('morgan')
 
 const routes = require('./routes')
-// 日志模块
-const winston = require('winston')
-const expressWinston = require('express-winston')
 
 var app = express()
 
-// 日志
-app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-// 正常请求的日志
-app.use(
-  expressWinston.logger({
-    transports: [
-      new winston.transports.Console({
-        json: true,
-        colorize: true
-      }),
-      new winston.transports.File({
-        filename: 'logs/success.log'
-      })
-    ]
-  })
-)
-// app.use('/', indexRouter)
-// app.use('/users', usersRouter)
 // 路由
 routes(app)
-// 错误请求的日志
-app.use(
-  expressWinston.errorLogger({
-    transports: [
-      new winston.transports.Console({
-        json: true,
-        colorize: true
-      }),
-      new winston.transports.File({
-        filename: 'logs/error.log'
-      })
-    ]
-  })
-)
-
-// catch 404 and forward to error handler
+// 404
 app.use(function(req, res, next) {
-  next(createError(404))
-})
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
   // render the error page
-  res.status(err.status || 500)
-  res.render('error')
+  res.status(404)
+  res.json({ code: 404, msg: '没有找到该接口！' })
+})
+// 500
+app.use(function(err, req, res, next) {
+  console.log('拦截到的错误：', err)
+  // render the error page
+  res.status(res.statusCode || 500)
+  res.json({ code: res.statusCode, msg: err.message })
 })
 
 module.exports = app

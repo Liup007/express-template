@@ -20,4 +20,17 @@ router.get('/register', validate(condition), async function(req, res, next) {
     next(new Error(e))
   }
 })
+// 获取用户
+router.get('/list', async function(req, res, next) {
+  try {
+    let query = req.query
+    let params = { userName: query.userName, tel: query.tel }
+
+    let result = await mongo.find('users', params)
+    res.json(result)
+  } catch (e) {
+    res.status(500)
+    next(new Error(e))
+  }
+})
 module.exports = router
